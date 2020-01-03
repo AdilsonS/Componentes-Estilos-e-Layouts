@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, Text, Button, TouchableWithoutFeedback, Keyboard } from 'react-native';
+import { View, StyleSheet, Text, Button, TouchableWithoutFeedback, Keyboard, Alert } from 'react-native';
 
 import Card from '../components/Card';
 import Colors from '../constants/colors';
@@ -7,17 +7,49 @@ import MyInput from '../components/Input';
 
 const StartGameScreen = props => {
   const [enteredValue, setEnteredValue] = useState('');
+  const [confirmed, setConfirmed] = useState(false);
+  const [selectedNumber, setSelectedNumber] = useState();
 
-  const confirAction = () => { };
-  const restAction = () => { };
+  const confirAction = () => {
+    closeKeyBoard();
+    const chosenNumber = parseInt(enteredValue);
+    if (isNaN(chosenNumber) || chosenNumber <= 0 || chosenNumber > 99) {
+      Alert.alert(
+        'Invalid number',
+        'Number has to be number between 1 and 99',
+        [{ text: 'OK', style: 'destructive', onPress: restAction }]
+      )
+      return;
+    }
+
+    setConfirmed(true);
+    setSelectedNumber(chosenNumber);
+    setEnteredValue('');
+  };
+
+  const restAction = () => {
+    closeKeyBoard();
+    setEnteredValue('');
+    setConfirmed(false);    
+  };
 
   const numberInputHandler = inputText => {
     setEnteredValue(inputText.replace(/[^0-9]/g, ''));
-  }
+  };
 
   const closeKeyBoard = () => {
     Keyboard.dismiss();
-   }
+  };
+
+  let confirmedOutput
+  if (confirmed)
+    confirmedOutput =
+      <Card style={styles.msgAlert}>
+        <Text>Chose number</Text>
+        <Text style={styles.txtAlert}>{selectedNumber}</Text>
+        <View style={styles.buttonStart}><Button title='Start Game' color={Colors.acent} /></View>
+      </Card>
+
 
   return (
     <TouchableWithoutFeedback onPress={closeKeyBoard}>
@@ -33,10 +65,11 @@ const StartGameScreen = props => {
             onChangeText={numberInputHandler}
             value={enteredValue} />
           <View style={styles.buttonContainer}>
-            <View style={styles.button} ><Button title="Reset" color={Colors.primary} onPress={restAction()} /></View>
-            <View style={styles.button}><Button title="Confirm" color={Colors.acent} onPress={confirAction()} /></View>
+            <View style={styles.button} ><Button title="Reset" color={Colors.primary} onPress={restAction} /></View>
+            <View style={styles.button}><Button title="Confirm" color={Colors.blue} onPress={confirAction} /></View>
           </View>
         </Card>
+        {confirmedOutput}
       </View>
     </TouchableWithoutFeedback>
   )
@@ -75,6 +108,21 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingHorizontal: 15,
   },
+
+  msgAlert: {
+    padding: '2%',
+    width: '50%',
+    alignItems: 'center',
+  },
+
+  txtAlert: {
+    fontSize: 18,
+    color: Colors.primary
+  },
+
+  buttonStart:{
+    padding:'5%'
+  }
 });
 
 export default StartGameScreen;
