@@ -30,7 +30,7 @@ const StartGameScreen = props => {
   const restAction = () => {
     closeKeyBoard();
     setEnteredValue('');
-    setConfirmed(false);    
+    setConfirmed(false);
   };
 
   const numberInputHandler = inputText => {
@@ -47,7 +47,9 @@ const StartGameScreen = props => {
       <Card style={styles.msgAlert}>
         <Text>Chose number</Text>
         <Text style={styles.txtAlert}>{selectedNumber}</Text>
-        <View style={styles.buttonStart}><Button title='Start Game' color={Colors.acent} /></View>
+        <View style={styles.buttonStart}>
+          <Button title='Start Game' color={Colors.acent} onPress={() => props.onStartGame(selectedNumber)} />
+        </View>
       </Card>
 
 
@@ -120,8 +122,8 @@ const styles = StyleSheet.create({
     color: Colors.primary
   },
 
-  buttonStart:{
-    padding:'5%'
+  buttonStart: {
+    padding: '5%'
   }
 });
 
