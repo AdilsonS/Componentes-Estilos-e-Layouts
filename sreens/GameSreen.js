@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { View, Text, StyleSheet, Alert } from 'react-native';
 
 import Card from '../components/Card';
@@ -17,6 +17,37 @@ const generateRandom = (min, max, exlude) => {
 
 const GameScreen = props => {
   const [currentGuess, setCurrentGuess] = useState(generateRandom(1, 100, props.userChoice));
+  const [rounds, setRounds] = useState(0);
+
+  const currentLow = useRef(1);
+  const currentHigh = useRef(100);
+
+  const { userChoice, onGameOver } = props;
+
+  useEffect(() => {
+    if (currentGuess === userChoice) {
+      onGameOver(rounds);
+    }
+  }, [currentGuess, userChoice, onGameOver])
+
+  const nextGuessHandler = direction => {
+    if ((direction === 'lower' && currentGuess < props.userChoice)
+      || (direction === 'greater' && currentGuess > props.userChoice)) {
+      Alert.alert("Don't lie!", "You know that this is wrong...", [{ text: "Sory", style: "cancel" }])
+      return;
+    }
+
+    if (direction === "lower")
+      currentHigh.current = currentGuess
+    else if (direction === "greater")
+      currentLow.current = currentGuess;
+    else
+      return;
+
+    const nextNumber = generateRandom(currentLow.current, currentHigh.current, currentGuess);
+    setCurrentGuess(nextNumber);
+    setRounds(curRounds => curRounds + 1);
+  }
 
   return (
     <View style={styles.screen}>
@@ -24,8 +55,8 @@ const GameScreen = props => {
         <Text>Oponent's Guess</Text>
         <Text>{currentGuess}</Text>
         <View style={styles.butons}>
-          <Text style={[styles.arrow, styles.rotate]} onPress={() => { console.log('cima') }}>V</Text>
-          <Text style={styles.arrow} onPress={() => { console.log('baixo') }}>V</Text>
+          <Text style={[styles.arrow, styles.rotate]} onPress={nextGuessHandler.bind(this, 'greater')}>V</Text>
+          <Text style={styles.arrow} onPress={nextGuessHandler.bind(this, 'lower')}>V</Text>
         </View>
       </Card>
     </View>
