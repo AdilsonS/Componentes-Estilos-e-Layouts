@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, Button, Image } from 'react-native';
 
+import ButtonMain from '../components/ButtonMain';
 import DefaultStyle from '../constants/styles';
 import Colors from '../constants/colors';
 
@@ -16,9 +17,13 @@ const GameOverScreen = props => {
           //fadeDuration={1000}
           resizeMode="cover" />
       </View>
-      <Text style={styles.text}>Number of rounds: {props.guessRounds}</Text>
-      <Text style={styles.text}>Number was: {props.userNumber}</Text>
-      <Button title="Restart Game" onPress={props.onRestartGame} />
+      <View style={styles.resultContainer}>
+        <Text style={styles.text}>
+          Your phhone need<Text style={styles.numbers}> {props.guessRounds} </Text>
+          rounds to guess the number<Text style={styles.numbers}> {props.userNumber} </Text>
+        </Text>
+      </View>
+      <ButtonMain onPress={props.onRestartGame}> New Game</ButtonMain>
     </View>)
 };
 
@@ -28,8 +33,14 @@ const styles = StyleSheet.create({
   },
 
   text: {
-    fontFamily: 'open-sans'
+    fontFamily: 'open-sans',
+    marginVertical: 5,
+    textAlign: 'center'
   },
+  numbers: {
+    color: Colors.primary
+  },
+
   title: {
     fontSize: 18,
     fontFamily: 'open-sans-bold',
@@ -49,6 +60,10 @@ const styles = StyleSheet.create({
   image: {
     width: '100%',
     height: '100%'
+  },
+
+  resultContainer: {
+    width: '80%',
   },
 });
 
