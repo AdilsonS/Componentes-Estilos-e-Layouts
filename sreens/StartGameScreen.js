@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { View, StyleSheet, Text, Button, TouchableWithoutFeedback, Keyboard, Alert } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 
 import Card from '../components/Card';
 import MyInput from '../components/Input';
+import ButtonMain from '../components/ButtonMain';
 import Colors from '../constants/colors';
 import DefaultStyle from '../constants/styles';
 
@@ -50,7 +52,10 @@ const StartGameScreen = props => {
         <Text>Chose number</Text>
         <Text style={styles.txtAlert}>{selectedNumber}</Text>
         <View style={styles.buttonStart}>
-          <Button title='Start Game' color={Colors.acent} onPress={() => props.onStartGame(selectedNumber)} />
+        <ButtonMain onPress={() => props.onStartGame(selectedNumber)}>
+          <Ionicons name='md-power' size={24} color='white'/>
+        </ButtonMain>
+          {/* <Button title='Start Game' color={Colors.acent} onPress={() => props.onStartGame(selectedNumber)} /> */}
         </View>
       </Card>
 
