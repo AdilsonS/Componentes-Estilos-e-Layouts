@@ -2,8 +2,10 @@ import React, { useState } from 'react';
 import { View, StyleSheet, Text, Button, TouchableWithoutFeedback, Keyboard, Alert } from 'react-native';
 
 import Card from '../components/Card';
-import Colors from '../constants/colors';
 import MyInput from '../components/Input';
+import Colors from '../constants/colors';
+import DefaultStyle from '../constants/styles';
+
 
 const StartGameScreen = props => {
   const [enteredValue, setEnteredValue] = useState('');
@@ -55,7 +57,7 @@ const StartGameScreen = props => {
 
   return (
     <TouchableWithoutFeedback onPress={closeKeyBoard}>
-      <View style={styles.screen}>
+      <View style={[styles.screen, DefaultStyle.screen]}>
         <Text style={styles.title}>Start a new game</Text>
         <Card style={styles.inputContainer}>
           <MyInput style={styles.input}
@@ -79,15 +81,13 @@ const StartGameScreen = props => {
 
 const styles = StyleSheet.create({
   screen: {
-    flex: 1,
     padding: 10,
-    alignItems: 'center',
   },
 
   title: {
     fontSize: 20,
     marginVertical: 10,
-    
+
   },
 
   input: {

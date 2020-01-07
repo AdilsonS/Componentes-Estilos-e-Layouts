@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, Alert } from 'react-native';
 
 import Card from '../components/Card';
 import Colors from '../constants/colors';
+import DefaultStyle from '../constants/styles';
 
 const generateRandom = (min, max, exlude) => {
   min = Math.ceil(min);
@@ -50,7 +51,7 @@ const GameScreen = props => {
   }
 
   return (
-    <View style={styles.screen}>
+    <View style={DefaultStyle.screen}>
       <Card style={styles.card}>
         <Text>Oponent's Guess</Text>
         <Text>{currentGuess}</Text>
@@ -65,11 +66,6 @@ const GameScreen = props => {
 };
 
 const styles = StyleSheet.create({
-  screen: {
-    flex: 1,
-    alignItems: 'center',
-  },
-
   card: {
     width: '80%'
   },
