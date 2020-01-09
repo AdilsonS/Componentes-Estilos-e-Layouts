@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { View, Text, StyleSheet, Alert, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, Alert, ScrollView, FlatList } from 'react-native';
 
 import Card from '../components/Card';
 import Colors from '../constants/colors';
@@ -16,10 +16,17 @@ const generateRandom = (min, max, exlude) => {
     return rndNum;
 }
 
-const renderListItem = (numberOfRounds, value) => (
-  <View style={styles.listItem} key={value}>
-    <Text>#{numberOfRounds}</Text>
-    <Text>{value}</Text>
+// const renderListItem = (numberOfRounds, value) => (
+//   <View style={styles.listItem} key={value}>
+//     <Text>#{numberOfRounds}</Text>
+//     <Text>{value}</Text>
+//   </View>
+// );
+
+const renderListItem = (listLength, itemData) => (
+  <View style={styles.listItem}>
+    <Text>#{listLength - itemData.index}</Text>
+    <Text>{itemData.item}</Text>
   </View>
 );
 
@@ -27,7 +34,8 @@ const GameScreen = props => {
   const initialGuess = generateRandom(1, 100, props.userChoice)
   const [currentGuess, setCurrentGuess] = useState(initialGuess);
   //const [rounds, setRounds] = useState(0);
-  const [pastGuesses, setPastGuesses] = useState([initialGuess]);
+  //const [pastGuesses, setPastGuesses] = useState([initialGuess]);
+  const [pastGuesses, setPastGuesses] = useState([initialGuess.toString()]);
   const currentLow = useRef(1);
   const currentHigh = useRef(100);
 
@@ -72,9 +80,16 @@ const GameScreen = props => {
       </Card>
 
       <View style={styles.listContainer}>
-        <ScrollView contentContainerStyle={styles.list}>
+        {/* <ScrollView contentContainerStyle={styles.list}>
           {pastGuesses.map((guess, index) => renderListItem(pastGuesses.length - index, guess))}
-        </ScrollView>
+        </ScrollView> */}
+
+        <FlatList
+          keyExtractor={item => item}
+          data={pastGuesses}
+          renderItem={renderListItem.bind(this, pastGuesses.length)}
+          contentContainerStyle={styles.list}
+        />
       </View>
     </View>
 
@@ -107,15 +122,16 @@ const styles = StyleSheet.create({
   },
 
   listContainer: {
-    flex:1,
-    width: '80%',
-    marginTop:'5%',
+    flex: 1,
+    //width: '80%',
+    width: '70%',
+    marginTop: '5%',
   },
 
-  list:{
-    flexGrow:1,
-    justifyContent:'flex-end',
-    alignItems:'center'
+  list: {
+    flexGrow: 1,
+    justifyContent: 'flex-end',
+    //alignItems: 'center'
   },
 
   listItem: {
@@ -126,7 +142,8 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.white,
     flexDirection: 'row',
     justifyContent: 'space-around',
-    width:'85%',
+    //width: '85%',
+    width: '100%',
   }
 
 });
