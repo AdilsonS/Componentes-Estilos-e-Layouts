@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { View, Text, StyleSheet, Alert, ScrollView, FlatList } from 'react-native';
+import { View, Text, StyleSheet, Alert, ScrollView, FlatList, TouchableOpacity } from 'react-native';
 
 import Card from '../components/Card';
 import Colors from '../constants/colors';
@@ -74,8 +74,19 @@ const GameScreen = props => {
         <Text>Oponent's Guess</Text>
         <Text>{currentGuess}</Text>
         <View style={styles.butons}>
-          <Text style={[styles.arrow, styles.rotate]} onPress={nextGuessHandler.bind(this, 'greater')}>V</Text>
-          <Text style={styles.arrow} onPress={nextGuessHandler.bind(this, 'lower')}>V</Text>
+
+          <TouchableOpacity activeOpacity={0.5} onPress={nextGuessHandler.bind(this, 'lower')}>
+            <View style={styles.containerArrow}>
+              <Text style={styles.arrow}>V</Text>
+            </View>
+          </TouchableOpacity>
+
+          <TouchableOpacity activeOpacity={0.5} onPress={nextGuessHandler.bind(this, 'greater')}>
+            <View style={styles.containerArrow}>
+              <Text style={[styles.arrow, styles.rotate]}>V</Text>
+            </View>
+          </TouchableOpacity>
+         
         </View>
       </Card>
 
@@ -103,21 +114,25 @@ const styles = StyleSheet.create({
 
   butons: {
     width: '50%',
-
     justifyContent: 'space-between',
     flexDirection: 'row',
+  },
 
+  containerArrow: {
+    width: 40,
+    height: 40,
+    backgroundColor: Colors.primary,
+    borderRadius: 20
   },
   arrow: {
-    fontSize: 30,
-    width: '30%',
-    textAlign: 'center',
-    borderRadius: 50,
-    backgroundColor: Colors.primary,
+    fontSize:30,
+    textAlign:'center',
     color: Colors.white
   },
+
   rotate: {
     backgroundColor: Colors.acent,
+    borderRadius: 20,
     transform: [{ rotate: '-180deg' }]
   },
 
