@@ -1,5 +1,14 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { View, Text, StyleSheet, Alert, ScrollView, FlatList, TouchableOpacity } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Alert,
+  ScrollView,
+  FlatList,
+  TouchableOpacity,
+  Dimensions
+} from 'react-native';
 
 import Card from '../components/Card';
 import Colors from '../constants/colors';
@@ -36,16 +45,31 @@ const GameScreen = props => {
   //const [rounds, setRounds] = useState(0);
   //const [pastGuesses, setPastGuesses] = useState([initialGuess]);
   const [pastGuesses, setPastGuesses] = useState([initialGuess.toString()]);
+  const [avaliableDeviceHeight, setAvaliableDeviceHeight] = useState(Dimensions.get('window').height);
+  const [avaliableDeviceWidth, setAavaliableDeviceWidth] = useState(Dimensions.get('window').width)
   const currentLow = useRef(1);
   const currentHigh = useRef(100);
 
   const { userChoice, onGameOver } = props;
 
+
+  useEffect(() => {
+    const updateLayout = () => {
+      setAvaliableDeviceHeight(Dimensions.get('window').height);
+      setAavaliableDeviceWidth(Dimensions.get('window').width);
+    };
+    Dimensions.addEventListener('change', updateLayout);
+
+    return () => {
+      Dimensions.removeEventListener('change', updateLayout);
+    }
+  });
+
   useEffect(() => {
     if (currentGuess === userChoice) {
       onGameOver(pastGuesses.length);
     }
-  }, [currentGuess, userChoice, onGameOver])
+  }, [currentGuess, userChoice, onGameOver]);
 
   const nextGuessHandler = direction => {
     if ((direction === 'lower' && currentGuess < props.userChoice)
@@ -68,43 +92,127 @@ const GameScreen = props => {
 
   }
 
-  return (
-    <View style={DefaultStyle.screen}>
-      <Card style={styles.card}>
-        <Text>Oponent's Guess</Text>
-        <Text>{currentGuess}</Text>
-        <View style={styles.butons}>
+  let listContainerStyle = styles.listContainerBig
+  if (avaliableDeviceWidth < 350)
+    listContainerStyle = styles.listContainerSmall
 
-          <TouchableOpacity activeOpacity={0.5} onPress={nextGuessHandler.bind(this, 'lower')}>
-            <View style={styles.containerArrow}>
-              <Text style={styles.arrow}>V</Text>
-            </View>
-          </TouchableOpacity>
+  if (avaliableDeviceHeight < 500) {
+    return (
+      <ScrollView>
+        <View style={DefaultStyle.screen}>
+          <Card style={styles.card}>
+            <Text>Oponent's Guesssssssssssssssssssss</Text>
+            <View style={[styles.butonContainer, { marginTop: avaliableDeviceHeight > 600 ? 10 : 3, }]}>
 
-          <TouchableOpacity activeOpacity={0.5} onPress={nextGuessHandler.bind(this, 'greater')}>
-            <View style={styles.containerArrow}>
-              <Text style={[styles.arrow, styles.rotate]}>V</Text>
+              <TouchableOpacity activeOpacity={0.5} onPress={nextGuessHandler.bind(this, 'lower')}>
+                <View style={styles.containerArrow}>
+                  <Text style={styles.arrow}>V</Text>
+                </View>
+              </TouchableOpacity>
+              <View style={{ marginTop: avaliableDeviceHeight * 0.03 }}>
+                <Text>{currentGuess}</Text>
+              </View>
+              <TouchableOpacity activeOpacity={0.5} onPress={nextGuessHandler.bind(this, 'greater')}>
+                <View style={styles.containerArrow}>
+                  <Text style={[styles.arrow, styles.rotate]}>V</Text>
+                </View>
+              </TouchableOpacity>
+
             </View>
-          </TouchableOpacity>
-         
+          </Card>
+
+          <View style={[listContainerStyle, { marginTop: avaliableDeviceHeight * 0.05 }]}>
+            <FlatList
+              keyExtractor={item => item}
+              data={pastGuesses}
+              renderItem={renderListItem.bind(this, pastGuesses.length)}
+              contentContainerStyle={styles.list}
+            />
+          </View>
+
         </View>
-      </Card>
+      </ScrollView>
+    )
+  } else {
+    return (
+      <ScrollView>
+        <View style={DefaultStyle.screen}>
+          <Card style={styles.card}>
+            <Text>Oponent's Guess</Text>
+            <View>
+              <Text>{currentGuess}</Text>
+            </View>
+            <View style={[styles.butonContainer, { marginTop: avaliableDeviceHeight > 600 ? 10 : 3, }]}>
 
-      <View style={styles.listContainer}>
-        {/* <ScrollView contentContainerStyle={styles.list}>
-          {pastGuesses.map((guess, index) => renderListItem(pastGuesses.length - index, guess))}
-        </ScrollView> */}
+              <TouchableOpacity activeOpacity={0.5} onPress={nextGuessHandler.bind(this, 'lower')}>
+                <View style={styles.containerArrow}>
+                  <Text style={styles.arrow}>V</Text>
+                </View>
+              </TouchableOpacity>
 
-        <FlatList
-          keyExtractor={item => item}
-          data={pastGuesses}
-          renderItem={renderListItem.bind(this, pastGuesses.length)}
-          contentContainerStyle={styles.list}
-        />
-      </View>
-    </View>
+              <TouchableOpacity activeOpacity={0.5} onPress={nextGuessHandler.bind(this, 'greater')}>
+                <View style={styles.containerArrow}>
+                  <Text style={[styles.arrow, styles.rotate]}>V</Text>
+                </View>
+              </TouchableOpacity>
 
-  )
+            </View>
+          </Card>
+
+          <View style={[listContainerStyle, { marginTop: avaliableDeviceHeight * 0.05 }]}>
+            <FlatList
+              keyExtractor={item => item}
+              data={pastGuesses}
+              renderItem={renderListItem.bind(this, pastGuesses.length)}
+              contentContainerStyle={styles.list}
+            />
+          </View>
+
+        </View>
+      </ScrollView>
+    )
+  }
+  //#region Layout fixo
+  // return (
+  //   <ScrollView>
+  //     <View style={DefaultStyle.screen}>
+  //       <Card style={styles.card}>
+  //         <Text>Oponent's Guess</Text>
+  //         <Text>{currentGuess}</Text>
+  //         <View style={styles.butonContainer}>
+
+  //           <TouchableOpacity activeOpacity={0.5} onPress={nextGuessHandler.bind(this, 'lower')}>
+  //             <View style={styles.containerArrow}>
+  //               <Text style={styles.arrow}>V</Text>
+  //             </View>
+  //           </TouchableOpacity>
+
+  //           <TouchableOpacity activeOpacity={0.5} onPress={nextGuessHandler.bind(this, 'greater')}>
+  //             <View style={styles.containerArrow}>
+  //               <Text style={[styles.arrow, styles.rotate]}>V</Text>
+  //             </View>
+  //           </TouchableOpacity>
+
+  //         </View>
+  //       </Card>
+  //       {/* <View style={styles.listContainer}> */}
+  //       {/* <View style={Dimensions.get('window').width > 500 ? styles.listContainerBig : styles.listContainerSmall}> */}
+  //       <View style={listContainerStyle}>
+  //         {/* <ScrollView contentContainerStyle={styles.list}>
+  //         {pastGuesses.map((guess, index) => renderListItem(pastGuesses.length - index, guess))}
+  //       </ScrollView> */}
+
+  //         <FlatList
+  //           keyExtractor={item => item}
+  //           data={pastGuesses}
+  //           renderItem={renderListItem.bind(this, pastGuesses.length)}
+  //           contentContainerStyle={styles.list}
+  //         />
+  //       </View>
+  //     </View>
+  //   </ScrollView>
+  // )
+  //#endregion
 };
 
 const styles = StyleSheet.create({
@@ -112,10 +220,11 @@ const styles = StyleSheet.create({
     width: '80%'
   },
 
-  butons: {
+  butonContainer: {
     width: '50%',
     justifyContent: 'space-between',
     flexDirection: 'row',
+    //marginTop: Dimensions.get('window').height > 600 ? 10 : 3,
   },
 
   containerArrow: {
@@ -125,8 +234,8 @@ const styles = StyleSheet.create({
     borderRadius: 20
   },
   arrow: {
-    fontSize:30,
-    textAlign:'center',
+    fontSize: 30,
+    textAlign: 'center',
     color: Colors.white
   },
 
@@ -136,12 +245,26 @@ const styles = StyleSheet.create({
     transform: [{ rotate: '-180deg' }]
   },
 
-  listContainer: {
+  // listContainer: {
+  //   flex: 1,
+  //   //width: '80%',
+  //   //width: '70%',
+  //   width: Dimensions.get('window').width > 500 ? '60%' : '80%',
+  //   marginTop: '5%',
+  // },
+
+  listContainerBig: {
+    width: '80%',
+    //marginTop: '5%',
     flex: 1,
-    //width: '80%',
-    width: '70%',
-    marginTop: '5%',
   },
+
+  listContainerSmall: {
+    width: '60%',
+    //marginTop: '5%',
+    flex: 1,
+  },
+
 
   list: {
     flexGrow: 1,

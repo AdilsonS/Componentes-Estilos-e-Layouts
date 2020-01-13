@@ -9,6 +9,8 @@ import StartGameScreen from './sreens/StartGameScreen';
 import GameScreen from './sreens/GameSreen';
 import GameOverScreen from './sreens/GameOverScreen';
 
+import DefaltStyle from "./constants/styles";
+
 
 const fetchFonts = () => {
   return Font.loadAsync({
@@ -49,9 +51,10 @@ export default function App() {
     content = <GameOverScreen onRestartGame={RestartGameHandler} guessRounds={guessRounds} userNumber={userNumber} />
 
   return (
-    <View style={styles.screen}>
+    <View style={DefaltStyle.screen}>
       <Header title="Guess a Number" />
-      {content}
+      <GameOverScreen onRestartGame={RestartGameHandler} guessRounds={guessRounds} userNumber={userNumber} />
+      {/* {content} */}
     </View>
   );
 }
@@ -59,5 +62,5 @@ export default function App() {
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-  }
+  },
 });
