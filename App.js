@@ -53,8 +53,7 @@ export default function App() {
   return (
     <View style={DefaltStyle.screen}>
       <Header title="Guess a Number" />
-      <GameOverScreen onRestartGame={RestartGameHandler} guessRounds={guessRounds} userNumber={userNumber} />
-      {/* {content} */}
+      {content}
     </View>
   );
 }

@@ -101,7 +101,7 @@ const GameScreen = props => {
       <ScrollView>
         <View style={DefaultStyle.screen}>
           <Card style={styles.card}>
-            <Text>Oponent's Guesssssssssssssssssssss</Text>
+            <Text>Oponent's Gues</Text>
             <View style={[styles.butonContainer, { marginTop: avaliableDeviceHeight > 600 ? 10 : 3, }]}>
 
               <TouchableOpacity activeOpacity={0.5} onPress={nextGuessHandler.bind(this, 'lower')}>
